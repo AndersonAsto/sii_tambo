@@ -10,12 +10,13 @@ def create_app():
 
     from routes.admin import admin_bp
     from routes.stores import stores_bp
-
+    from routes.prod import productos_bp
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(stores_bp, url_prefix="/stores")
-
+    app.register_blueprint(productos_bp, url_prefix="/products")
     return app
 
+    
 app = create_app()
 
 @app.route("/")

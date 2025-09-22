@@ -1,0 +1,114 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center text-primary">Lista de Productos</h2>
+
+    <!-- Filtros -->
+    <form method="get" action="{{ url_for('productos.productos') }}" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <label class="form-label">Categoría</label>
+            <input type="number" class="form-control" name="categoria" value="{{ categoria_id or '' }}" placeholder="ID Categoría">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Subcategoría</label>
+            <input type="number" class="form-control" name="subcategoria" value="{{ subcategoria_id or '' }}" placeholder="ID Subcategoría">
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </form>
+
+    <!-- Tabla de productos -->
+    <div class="card shadow-lg rounded-4 border-0">
+        <div class="card-body">
+            <table class="table table-hover align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Precio Antiguo</th>
+                        <th>Precio Nuevo</th>
+                        <th>Descuento (%)</th>
+                        <th>Estado</th>
+                        <th>Última Actualización</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in productos %}
+                    <tr>
+                        <td>{{ p.idProducto }}</td>
+                        <td class="fw-semibold">{{ p.producto }}</td>
+                        <td>
+                            {% if p.precioAntiguo %}
+                                <span class="text-muted text-decoration-line-through">
+                                    S/. {{ "%.2f"|format(p.precioAntiguo) }}
+                                </span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-success fw-bold">
+                            S/. {{ "%.2f"|format(p.precioNuevo) }}
+                        </td>
+                        <td>{{ p.descuento or 0 }} %</td>
+                        <td>
+                            {% if p.estado %}
+                                <span class="badge bg-success">Activo</span>
+                            {% else %}
+                                <span class="badge bg-danger">Inactivo</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ p.updatedAt.strftime('%d/%m/%Y %H:%M') if p.updatedAt else '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if pagination.has_prev %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="{{ url_for('productos.productos', page=pagination.prev_num, categoria=categoria_id, subcategoria=subcategoria_id) }}">
+                    « Anterior
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">« Anterior</span></li>
+            {% endif %}
+
+            {% for num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                {% if num %}
+                    {% if num == pagination.page %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="{{ url_for('productos.productos', page=num, categoria=categoria_id, subcategoria=subcategoria_id) }}">
+                                {{ num }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if pagination.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="{{ url_for('productos.productos', page=pagination.next_num, categoria=categoria_id, subcategoria=subcategoria_id) }}">
+                    Siguiente »
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Siguiente »</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}
