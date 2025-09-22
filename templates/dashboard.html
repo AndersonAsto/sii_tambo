@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+
+{% block title %}Panel de Administración - Tambo{% endblock %}
+
+{% block content %}
+<h2>Gestión del Sistema</h2>
+<div class="grid">
+    <div class="card">
+        <h3>Tiendas</h3>
+        <p>Registrar y administrar las tiendas de la cadena (ubicación, nombre, código).</p>
+        <a href="{{ url_for('stores.index') }}" class="btn btn-purple">Ir a Tiendas</a>
+    </div>
+
+    <div class="card">
+        <h3>Productos</h3>
+        <p>Gestión de productos disponibles en las tiendas.</p>
+        <a href="#" class="btn btn-yellow">Ir a Productos</a>
+    </div>
+
+    <div class="card">
+        <h3>Ventas</h3>
+        <p>Registrar clientes y controlar ventas realizadas.</p>
+        <a href="#" class="btn btn-purple">Ir a Ventas</a>
+    </div>
+</div>
+{% endblock %}

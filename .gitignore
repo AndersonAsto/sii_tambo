@@ -1,0 +1,40 @@
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Configuración local de VSCode u otros editores
+.vscode/
+.idea/
+
+# Archivos de entorno
+.env
+
+# Cachés y compilados de Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+*.manifest
+*.spec
+
+# Salidas y datos generados
+/output/
+*.log
+*.csv
+
+# Archivos de base de datos locales
+*.sqlite3
+*.db
+
+# Archivos de sistema (Windows / macOS / Linux)
+Thumbs.db
+.DS_Store
+*.swp
+*.swo
+
+# Docker
+*.pid

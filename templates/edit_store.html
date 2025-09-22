@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Tienda</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f6fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            position: relative;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 350px;
+        }
+        .back-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            text-decoration: none;
+            font-size: 14px;
+            background: #6a0dad;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .back-btn:hover {
+            background: #520a99;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #5a189a;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #7b2cbf;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #9d4edd;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <a href="{{ url_for('stores.index') }}" class="back-btn">⬅ Volver</a>
+        <h2>Editar Tienda</h2>
+        <form method="POST">
+            <label>Código:</label>
+            <input type="text" name="codigo" value="{{ store.codigo }}" required>
+
+            <label>Nombre:</label>
+            <input type="text" name="nombre" value="{{ store.nombre }}" required>
+
+            <label>Dirección:</label>
+            <input type="text" name="direccion" value="{{ store.direccion }}" required>
+
+            <button type="submit">Actualizar</button>
+        </form>
+    </div>
+</body>
+</html>
