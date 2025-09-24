@@ -1,0 +1,122 @@
+{% extends "index.html" %}
+{% block title %}Nuevo Cajero - Tambo{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Registrar Nuevo Cajero</h2>
+
+    <form method="POST" action="{{ url_for('cajeros.nuevo_cajero') }}">
+        <!-- Correo -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-3">
+            <label for="contrasenia" class="form-label">Contraseña</label>
+            <input type="password" name="contrasenia" id="contrasenia" class="form-control" required>
+        </div>
+
+        <!-- Selección dinámica -->
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="departamento" class="form-label">Departamento</label>
+                <select id="departamento" class="form-select" required>
+                    <option value="">Seleccione</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="provincia" class="form-label">Provincia</label>
+                <select id="provincia" class="form-select" required>
+                    <option value="">Seleccione</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="distrito" class="form-label">Distrito</label>
+                <select id="distrito" class="form-select" required>
+                    <option value="">Seleccione</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tienda -->
+        <div class="mb-3">
+            <label for="tienda" class="form-label">Tienda</label>
+            <select id="tienda" name="idTienda" class="form-select" required>
+                <option value="">Seleccione</option>
+            </select>
+        </div>
+
+        <!-- Botones -->
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-save"></i> Guardar
+        </button>
+        <a href="{{ url_for('cajeros.listado') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<!-- Script de cascada -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Cargar departamentos al inicio
+    fetch("/stores/departamentos")
+        .then(res => res.json())
+        .then(data => {
+            let select = document.getElementById("departamento");
+            select.innerHTML = '<option value="">Seleccione</option>';
+            data.forEach(dep => {
+                select.innerHTML += `<option value="${dep}">${dep}</option>`;
+            });
+        });
+
+    // Provincias
+    document.getElementById("departamento").addEventListener("change", function() {
+        let dep = this.value;
+        fetch(`/stores/provincias/${dep}`)
+            .then(res => res.json())
+            .then(data => {
+                let select = document.getElementById("provincia");
+                select.innerHTML = '<option value="">Seleccione</option>';
+                data.forEach(prov => {
+                    select.innerHTML += `<option value="${prov}">${prov}</option>`;
+                });
+                document.getElementById("distrito").innerHTML = '<option value="">Seleccione</option>';
+                document.getElementById("tienda").innerHTML = '<option value="">Seleccione</option>';
+            });
+    });
+
+    // Distritos
+    document.getElementById("provincia").addEventListener("change", function() {
+        let dep = document.getElementById("departamento").value;
+        let prov = this.value;
+        fetch(`/stores/distritos/${dep}/${prov}`)
+            .then(res => res.json())
+            .then(data => {
+                let select = document.getElementById("distrito");
+                select.innerHTML = '<option value="">Seleccione</option>';
+                data.forEach(dist => {
+                    select.innerHTML += `<option value="${dist}">${dist}</option>`;
+                });
+                document.getElementById("tienda").innerHTML = '<option value="">Seleccione</option>';
+            });
+    });
+
+    // Tiendas
+    document.getElementById("distrito").addEventListener("change", function() {
+        let dep = document.getElementById("departamento").value;
+        let prov = document.getElementById("provincia").value;
+        let dist = this.value;
+        fetch(`/stores/tiendas/${dep}/${prov}/${dist}`)
+            .then(res => res.json())
+            .then(data => {
+                let select = document.getElementById("tienda");
+                select.innerHTML = '<option value="">Seleccione</option>';
+                data.forEach(t => {
+                    select.innerHTML += `<option value="${t.id}">${t.nombre}</option>`;
+                });
+            });
+    });
+});
+</script>
+{% endblock content %}

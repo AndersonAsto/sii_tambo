@@ -3,7 +3,15 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-3">Listado de Cajeros</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-4 text-dark">
+            🛒 Tiendas Registradas
+        </h2>
+        <a href="{{ url_for('cajeros.nuevo_cajero') }}" class="btn btn-success">
+            <i class="bi bi-person-plus"></i> Nuevo Cajero
+        </a>
+    </div>
+
     <p class="text-muted">Aquí podrás ver todos los cajeros registrados en el sistema.</p>
 
     <!-- Tabla de ejemplo -->
@@ -11,38 +19,45 @@
         <thead class="table-dark">
             <tr>
                 <th>ID</th>
-                <th>Nombre</th>
-                <th>DNI</th>
+                <th>Código</th>
                 <th>Correo</th>
+                <th>Tienda (Departamento/Provincia/Distrito)</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for cajero in cajeros %}
-            <tr>
-                <td>{{ cajero.id }}</td>
-                <td>{{ cajero.nombre }}</td>
-                <td>{{ cajero.dni }}</td>
-                <td>{{ cajero.email }}</td>
-                <td>
-                    {% if cajero.estado %}
-                        <span class="badge bg-success">Activo</span>
-                    {% else %}
-                        <span class="badge bg-danger">Inactivo</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="#" class="btn btn-sm btn-primary">Editar</a>
-                    <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
-                </td>
-            </tr>
+    {% for cajero in cajeros %}
+    <tr>
+        <td>{{ cajero.idUsuario }}</td>
+        <td>{{ cajero.codUsuario }}</td>
+        <td>{{ cajero.email }}</td>
+        <td>
+            {% if cajero.tienda %}
+                {{ cajero.tienda.tienda }} ({{ cajero.tienda.departamento }}/{{ cajero.tienda.provincia }}/{{ cajero.tienda.distrito }})
             {% else %}
-            <tr>
-                <td colspan="6" class="text-center text-muted">No hay cajeros registrados.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+                <span class="text-muted">Sin tienda</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if cajero.estado %}
+                <span class="badge bg-success">Activo</span>
+            {% else %}
+                <span class="badge bg-danger">Inactivo</span>
+            {% endif %}
+        </td>
+        <td>
+            <a href="#" class="btn btn-sm btn-primary">Editar</a>
+            <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+        </td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="6" class="text-center text-muted">No hay cajeros registrados.</td>
+    </tr>
+    {% endfor %}
+</tbody>
+
     </table>
 </div>
 {% endblock content %}

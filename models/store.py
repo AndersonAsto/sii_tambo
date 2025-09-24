@@ -14,6 +14,6 @@ class Store(db.Model):
     estado = db.Column(db.Boolean, default=True)
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
-
+    
     def __repr__(self):
         return f"<Store {self.nombre}>"

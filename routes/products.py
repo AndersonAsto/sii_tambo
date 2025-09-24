@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request
 from models.products import Producto
-from models.category import Categoria, SubCategoria
+from models.category import Categoria
+from models.subCategory import SubCategoria
 
 productos_bp = Blueprint('productos', __name__)
 

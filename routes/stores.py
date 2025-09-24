@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from config.config import db
 from models.store import Store
 
@@ -92,3 +92,33 @@ def delete(id):
     db.session.delete(store)
     db.session.commit()
     return redirect(url_for("stores.index"))
+
+
+@stores_bp.route("/list", methods=["GET"])
+def listado():
+    tiendas = Store.query.all()
+    return render_template("stores.html", tiendas=tiendas)
+
+# Obtener departamentos
+@stores_bp.route("/departamentos", methods=["GET"])
+def get_departamentos():
+    departamentos = db.session.query(Store.departamento).distinct().all()
+    return jsonify([d[0] for d in departamentos])
+
+# Obtener provincias por departamento
+@stores_bp.route("/provincias/<departamento>", methods=["GET"])
+def get_provincias(departamento):
+    provincias = db.session.query(Store.provincia).filter_by(departamento=departamento).distinct().all()
+    return jsonify([p[0] for p in provincias])
+
+# Obtener distritos por provincia
+@stores_bp.route("/distritos/<departamento>/<provincia>", methods=["GET"])
+def get_distritos(departamento, provincia):
+    distritos = db.session.query(Store.distrito).filter_by(departamento=departamento, provincia=provincia).distinct().all()
+    return jsonify([d[0] for d in distritos])
+
+# Obtener tiendas por distrito
+@stores_bp.route("/tiendas/<departamento>/<provincia>/<distrito>", methods=["GET"])
+def get_tiendas(departamento, provincia, distrito):
+    tiendas = Store.query.filter_by(departamento=departamento, provincia=provincia, distrito=distrito).all()
+    return jsonify([{"id": t.idTienda, "nombre": t.tienda} for t in tiendas])
