@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
 from models.products import Producto
+from models.category import Categoria, SubCategoria
 
 productos_bp = Blueprint('productos', __name__)
 
@@ -23,10 +24,21 @@ def productos():
     # Paginación
     productos_paginados = query.paginate(page=page, per_page=per_page, error_out=False)
 
+    # Cargar todas las categorías para el filtro
+    categorias = Categoria.query.all()
+
+    # Si hay categoría seleccionada, cargamos subcategorías correspondientes
+    subcategorias = []
+    if categoria_id:
+        subcategorias = SubCategoria.query.filter_by(idCategoria=categoria_id).all()
+
     return render_template(
         "producto.html",
         productos=productos_paginados.items,
         pagination=productos_paginados,
         categoria_id=categoria_id,
-        subcategoria_id=subcategoria_id
+        subcategoria_id=subcategoria_id,
+        categorias=categorias,
+        subcategorias=subcategorias
     )
+    
