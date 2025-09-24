@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, request, url_for, flash, redirect
+from flask import Blueprint, render_template, request, url_for, flash, redirect, session
 from models.cashiers import Cajeros
 from models.store import Store
 from config.config import db
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 cajeros_bp = Blueprint("cajeros", __name__)
 
@@ -33,3 +33,41 @@ def nuevo_cajero():
 
     # En caso GET, mostrar formulario
     return render_template("nuevo_cajero.html")
+
+# Ruta de login
+@cajeros_bp.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        contrasenia = request.form["contrasenia"]
+
+        # Buscar al cajero en la BD
+        cajero = Cajeros.query.filter_by(email=email).first()
+
+        if cajero and check_password_hash(cajero.contrasenia, contrasenia):
+            session["cajero_id"] = cajero.idUsuario
+            session["cajero_nombre"] = cajero.email
+            return redirect(url_for("cajeros.dashboard"))
+        else:
+            flash("Correo o contraseña incorrectos", "danger")
+
+    return render_template("cashiers_login.html")
+
+
+# Panel exclusivo del cajero
+@cajeros_bp.route("/dashboard")
+def dashboard():
+    if "cajero_id" not in session:
+        flash("Debes iniciar sesión primero", "warning")
+        return redirect(url_for("cajeros.login"))
+
+    cajero = Cajeros.query.get(session["cajero_id"])
+    return render_template("cashiers_index.html", cajero=cajero)
+
+
+# Logout
+@cajeros_bp.route("/logout")
+def logout():
+    session.clear()
+    flash("Sesión cerrada correctamente", "success")
+    return redirect(url_for("cajeros.login"))

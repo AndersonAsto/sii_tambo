@@ -121,11 +121,8 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <h3 class="text-white text-center mb-4">Tambo</h3>
-        <a href="{{ url_for('admin.dashboard') }}"><i class="bi bi-speedometer2"></i> Inicio</a>
-        <a href="{{ url_for('stores.index') }}"><i class="bi bi-shop"></i> Tiendas</a>
-        <a href="{{ url_for('productos.productos') }}"><i class="bi bi-bag"></i> Productos</a>
-        <a href="{{ url_for('cajeros.listado') }}"><i class="bi bi-person-workspace"></i> Cajeros</a>
+        {% block navigation %}
+        {% endblock navigation %}
         <!-- Agrega más enlaces según tus módulos -->
     </div>
 

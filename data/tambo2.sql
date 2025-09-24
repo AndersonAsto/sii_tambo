@@ -72,3 +72,28 @@ CREATE TABLE siit_usuarios(
 
     FOREIGN KEY (idTienda) REFERENCES siit_tiendas(idTienda) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
+
+CREATE TABLE siit_ventas(
+    idVenta INT AUTO_INCREMENT PRIMARY KEY,
+    idTienda INT NOT NULL,
+    idUsuario INT NOT NULL,
+
+    cantidadProductos INT NULL,
+    total DECIMAL(10,2) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (idTienda) REFERENCES siit_tiendas(idTienda) ON DELETE CASCADE,
+    FOREIGN KEY (idUsuario) REFERENCES siit_usuarios(idUsuario) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+CREATE TABLE siit_detalle_ventas(
+    idDetalle INT AUTO_INCREMENT PRIMARY KEY,
+    idVenta INT NOT NULL,
+    idProducto INT NOT NULL,
+    cantidad INT NOT NULL,
+    subtotal DECIMAL(10,2) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (idVenta) REFERENCES siit_ventas(idVenta) ON DELETE CASCADE,
+    FOREIGN KEY (idProducto) REFERENCES siit_productos(idProducto)
+) ENGINE=InnoDB;

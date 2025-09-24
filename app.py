@@ -12,10 +12,14 @@ def create_app():
     from routes.stores import stores_bp
     from routes.products import productos_bp
     from routes.cashiers import cajeros_bp
+    from routes.sales import sales_bp
+    from routes.stock import stock_bp
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(stores_bp, url_prefix="/stores")
     app.register_blueprint(productos_bp, url_prefix="/products")
     app.register_blueprint(cajeros_bp, url_prefix="/cashiers")
+    app.register_blueprint(sales_bp, url_prefix="/sales")
+    app.register_blueprint(stock_bp, url_prefix="/stock")
     return app
 
     
