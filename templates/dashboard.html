@@ -3,25 +3,61 @@
 {% block title %}Panel de Administración - Tambo{% endblock %}
 
 {% block content %}
-<h2>Gestión del Sistema</h2>
-<div class="grid">
-    <div class="card">
-        <h3>Tiendas</h3>
-        <p>Registrar y administrar las tiendas de la cadena (ubicación, nombre, código).</p>
-        <a href="{{ url_for('stores.index') }}" class="btn btn-purple">Ir a Tiendas</a>
-    </div>
+<div class="text-center py-5">
+    <!-- Bienvenida -->
+    <h1 class="fw-bold mb-3" style="color:#6a0dad;">BIENVENIDOS A </h1>
+    <p class="mb-4 text-secondary" style="font-size:1.2rem;">
 
-    <div class="card">
-        <h3>Productos</h3>
-        <p>Gestión de productos disponibles en las tiendas.</p>
-        <a href="{{ url_for('productos.productos') }}" class="btn btn-yellow">Ir a Productos</a>
-    </div>
+         <img src="https://marketingperu.beglobal.biz/wp-content/uploads/2024/11/logo-tambo.png" 
+         alt="Tambo" class="img-fluid rounded-4 shadow-sm mb-5" style="max-width:800px;">
 
-    <div class="card">
-        <h3>Ventas</h3>
-        <p>Registrar clientes y controlar ventas realizadas.</p>
-        <a href="#" class="btn btn-purple">Ir a Ventas</a>
+        
+    </p>
+
+    <p class="mb-4 text-secondary" style="font-size:1.2rem;">
+
+     Tus tiendas, productos y ventas de manera rápida y sencilla.
+
+     </p>
+    
+    <!-- Tarjetas con imágenes clickeables -->
+    <div class="row justify-content-center g-4">
+        <div class="col-md-3 col-sm-6">
+            <a href="{{ url_for('stores.index') }}" class="text-decoration-none">
+                <div class="card shadow-sm rounded-4">
+                    <img src="https://tofuu.getjusto.com/buckets-prod%2FWAJJnRPEmdXy83dqG-tambo-trabaja-con-nosotros.webp" 
+                         class="card-img-top rounded-top-4" alt="Tiendas">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">Tiendas</h5>
+                        <p class="card-text text-muted">Administra todas tus tiendas y su ubicación.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="{{ url_for('productos.productos') }}" class="text-decoration-none">
+                <div class="card shadow-sm rounded-4">
+                    <img src="https://tofuu.getjusto.com/buckets-prod%2FrQWDKSP8s69dwThuX-tambo-planta.webp" 
+                         class="card-img-top rounded-top-4" alt="Productos">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">Productos</h5>
+                        <p class="card-text text-muted">Gestiona los productos disponibles en cada tienda.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="#" class="text-decoration-none">
+                <div class="card shadow-sm rounded-4">
+                    <img src="https://tofuu.getjusto.com/buckets-prod%2Fre2TyECrzyxa4As5c-tambo-administrativo.webp" 
+                         class="card-img-top rounded-top-4" alt="Ventas">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">Ventas</h5>
+                        <p class="card-text text-muted">Controla ventas y registra clientes fácilmente.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}
-

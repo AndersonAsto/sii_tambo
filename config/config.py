@@ -10,7 +10,7 @@ class Config:
     MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "")
     MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
     MYSQL_PORT = os.getenv("MYSQL_PORT", "3306")
-    MYSQL_DB = os.getenv("MYSQL_DB", "sii_tambo")
+    MYSQL_DB = os.getenv("MYSQL_DB", "sistema_tambo")
     SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey")
 
     # Configuración de Flask-SQLAlchemy
