@@ -1,5 +1,209 @@
 {% extends "cashiers_index.html" %}
+{% block title %}Registrar Venta{% endblock %}
 
 {% block content %}
-<h2>Panel de ventas - Tambo</h2>
-{% endblock content %}
+<div class="container mt-4">
+    <h2>Registrar Venta</h2>
+
+    <form method="POST" id="form-venta">
+
+        <!-- Carrito -->
+        <h4>Productos en la venta</h4>
+        <table class="table table-striped" id="tabla-carrito">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                    <th>Quitar</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h3>Total: S/ <span id="total">0.00</span></h3>
+
+        <!-- Botón para abrir modal -->
+        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregar">
+            <i class="bi bi-plus-circle"></i> Agregar Producto
+        </button>
+
+        <br>
+        <button type="submit" class="btn btn-primary">Registrar Venta</button>
+    </form>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalAgregar" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Buscar Producto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Filtros -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Categoría</label>
+                <select id="categoria" class="form-control">
+                    <option value="">-- Todas --</option>
+                    {% for cat in categorias %}
+                        <option value="{{ cat.idCategoria }}">{{ cat.categoria }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label>Subcategoría</label>
+                <select id="subcategoria" class="form-control">
+                    <option value="">-- Todas --</option>
+                    {% for sub in subcategorias %}
+                        <option value="{{ sub.idSubCategoria }}" data-cat="{{ sub.idCategoria }}">
+                            {{ sub.subCategoria }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label>Buscar Producto</label>
+                <input type="text" id="buscar" class="form-control" placeholder="Nombre del producto">
+            </div>
+        </div>
+
+        <!-- Tabla de productos -->
+        <table class="table table-bordered" id="tabla-productos">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Seleccionar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in productos %}
+                <tr data-categoria="{{ p.idCategoria }}" data-subcategoria="{{ p.idSubCategoria }}">
+                    <td>{{ p.producto }}</td>
+                    <td>{{ "%.2f"|format(p.precioNuevo) }}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-success seleccionar"
+                                data-id="{{ p.idProducto }}"
+                                data-nombre="{{ p.producto }}"
+                                data-precio="{{ p.precioNuevo }}">
+                            <i class="bi bi-cart-plus"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    let carrito = [];
+    const totalEl = document.getElementById("total");
+    const tablaCarrito = document.querySelector("#tabla-carrito tbody");
+
+    // --- función debounce ---
+    function debounce(func, delay) {
+        let timer;
+        return function(...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // --- búsqueda con debounce ---
+    const buscarInput = document.getElementById("buscar");
+    buscarInput.addEventListener("keyup", debounce(function() {
+        let filtro = this.value.toLowerCase().trim();
+        document.querySelectorAll("#tabla-productos tbody tr").forEach(tr => {
+            let nombre = tr.children[0].innerText.toLowerCase();
+            tr.style.display = nombre.includes(filtro) ? "" : "none";
+        });
+    }, 300)); // espera 300ms antes de ejecutar
+
+    // --- filtros por categoría y subcategoría ---
+    document.getElementById("categoria").addEventListener("change", function() {
+        let catId = this.value;
+        document.querySelectorAll("#subcategoria option").forEach(opt => {
+            opt.style.display = (opt.dataset.cat === catId || opt.value === "") ? "" : "none";
+        });
+
+        document.querySelectorAll("#tabla-productos tbody tr").forEach(tr => {
+            tr.style.display = (catId === "" || tr.dataset.categoria === catId) ? "" : "none";
+        });
+    });
+
+    document.getElementById("subcategoria").addEventListener("change", function() {
+        let subId = this.value;
+        document.querySelectorAll("#tabla-productos tbody tr").forEach(tr => {
+            tr.style.display = (subId === "" || tr.dataset.subcategoria === subId) ? "" : "none";
+        });
+    });
+
+    // --- seleccionar producto desde modal ---
+    document.querySelectorAll(".seleccionar").forEach(btn => {
+        btn.addEventListener("click", function() {
+            let id = this.dataset.id;
+            let nombre = this.dataset.nombre;
+            let precio = parseFloat(this.dataset.precio);
+
+            let existente = carrito.find(p => p.id === id);
+            if (existente) {
+                existente.cantidad += 1;
+                existente.subtotal += precio;
+            } else {
+                carrito.push({id, nombre, precio, cantidad: 1, subtotal: precio});
+            }
+
+            renderCarrito();
+            bootstrap.Modal.getInstance(document.getElementById("modalAgregar")).hide();
+        });
+    });
+
+    function renderCarrito() {
+        tablaCarrito.innerHTML = "";
+        let total = 0;
+        carrito.forEach((p, i) => {
+            total += p.subtotal;
+            tablaCarrito.innerHTML += `
+                <tr>
+                    <td>${p.nombre}</td>
+                    <td>
+                        <input type="number" class="form-control actualizar" data-index="${i}" value="${p.cantidad}" min="1">
+                    </td>
+                    <td>S/ ${p.subtotal.toFixed(2)}</td>
+                    <td><button type="button" class="btn btn-danger btn-sm quitar" data-index="${i}">X</button></td>
+                </tr>
+                <input type="hidden" name="producto_id[]" value="${p.id}">
+                <input type="hidden" name="cantidad[]" value="${p.cantidad}">
+            `;
+        });
+        totalEl.innerText = total.toFixed(2);
+
+        document.querySelectorAll(".quitar").forEach(btn => {
+            btn.addEventListener("click", function() {
+                carrito.splice(this.dataset.index, 1);
+                renderCarrito();
+            });
+        });
+
+        document.querySelectorAll(".actualizar").forEach(inp => {
+            inp.addEventListener("change", function() {
+                let i = this.dataset.index;
+                let nueva = parseInt(this.value);
+                if (nueva <= 0) nueva = 1;
+                carrito[i].cantidad = nueva;
+                carrito[i].subtotal = carrito[i].precio * nueva;
+                renderCarrito();
+            });
+        });
+    }
+});
+</script>
+
+{% endblock %}

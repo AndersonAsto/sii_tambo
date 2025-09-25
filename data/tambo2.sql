@@ -1,19 +1,3 @@
-CREATE TABLE siit_tiendas(
-    idTienda INT AUTO_INCREMENT PRIMARY KEY,
-    codTienda VARCHAR(256) NOT NULL,
-
-    tienda VARCHAR(256) NOT NULL,
-    ubicacion VARCHAR(256) NOT NULL,
-    distrito VARCHAR(256) NOT NULL,
-    provincia VARCHAR(256) NOT NULL,
-    departamento VARCHAR(256) NOT NULL,
-    pais VARCHAR(256) NOT NULL,
-
-    estado TINYINT(1) DEFAULT 1,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE = InnoDB;
-
 CREATE TABLE siit_categorias(
     idCategoria INT AUTO_INCREMENT PRIMARY KEY,
     codCategoria VARCHAR(256),
@@ -56,6 +40,22 @@ CREATE TABLE siit_productos(
 
     FOREIGN KEY (idCategoria) REFERENCES siit_categorias(idCategoria) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (idSubCategoria) REFERENCES siit_subCategorias(idSubCategoria) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB;
+
+CREATE TABLE siit_tiendas(
+    idTienda INT AUTO_INCREMENT PRIMARY KEY,
+    codTienda VARCHAR(256) NOT NULL,
+
+    tienda VARCHAR(256) NOT NULL,
+    ubicacion VARCHAR(256) NOT NULL,
+    distrito VARCHAR(256) NOT NULL,
+    provincia VARCHAR(256) NOT NULL,
+    departamento VARCHAR(256) NOT NULL,
+    pais VARCHAR(256) NOT NULL,
+
+    estado TINYINT(1) DEFAULT 1,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE = InnoDB;
 
 CREATE TABLE siit_usuarios(

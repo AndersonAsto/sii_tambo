@@ -13,8 +13,7 @@ class Config:
     MYSQL_DB = os.getenv("MYSQL_DB", "sistema_tambo")
     SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey")
 
-    # Configuración de Flask-SQLAlchemy
     SQLALCHEMY_DATABASE_URI = (
-        f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}"
+        f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}?charset=utf8mb4&timezone=America/Lima"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False

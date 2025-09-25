@@ -47,23 +47,21 @@ def login():
         if cajero and check_password_hash(cajero.contrasenia, contrasenia):
             session["cajero_id"] = cajero.idUsuario
             session["cajero_nombre"] = cajero.email
+            session["idTienda"] = cajero.idTienda
             return redirect(url_for("cajeros.dashboard"))
         else:
             flash("Correo o contraseña incorrectos", "danger")
 
     return render_template("cashiers_login.html")
 
-
-# Panel exclusivo del cajero
 @cajeros_bp.route("/dashboard")
 def dashboard():
     if "cajero_id" not in session:
         flash("Debes iniciar sesión primero", "warning")
         return redirect(url_for("cajeros.login"))
 
-    cajero = Cajeros.query.get(session["cajero_id"])
-    return render_template("cashiers_index.html", cajero=cajero)
-
+    # Redirigimos al panel de ventas
+    return redirect(url_for("sales.sales"))
 
 # Logout
 @cajeros_bp.route("/logout")
