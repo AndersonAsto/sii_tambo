@@ -5,3 +5,10 @@ pandas
 numpy
 bs4
 dotenv
+beautifulsoup4
+bs4
+flask-login
+flask-mysqldb
+requests
+sqlalchemy
+werkzeug
