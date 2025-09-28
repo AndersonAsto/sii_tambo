@@ -2,7 +2,7 @@ from datetime import datetime
 from config.config import db
 
 class SubCategoria(db.Model):
-    __tablename__ = "siit_subCategorias"
+    __tablename__ = "siit_subcategorias"
 
     idSubCategoria = db.Column(db.Integer, primary_key=True, autoincrement=True)
     codSubCategoria = db.Column(db.String(256))
