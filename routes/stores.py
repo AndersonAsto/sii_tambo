@@ -1,6 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from config.config import db
 from models.store import Store
+from models.products import Producto
+from models.producto_tienda import ProductoTienda
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
+
 
 stores_bp = Blueprint("stores", __name__)
 
@@ -122,3 +126,42 @@ def get_distritos(departamento, provincia):
 def get_tiendas(departamento, provincia, distrito):
     tiendas = Store.query.filter_by(departamento=departamento, provincia=provincia, distrito=distrito).all()
     return jsonify([{"id": t.idTienda, "nombre": t.tienda} for t in tiendas])
+
+
+# Mostrar productos de una tienda y gestionar stock
+@stores_bp.route("/<int:tienda_id>/productos", methods=["GET", "POST"])
+def productos_tienda(tienda_id):
+    tienda = Store.query.get_or_404(tienda_id)
+
+    if request.method == "POST":
+        for key, value in request.form.items():
+            if key.startswith("stock_"):
+                producto_id = int(key.split("_")[1])
+                nuevo_stock = int(value)
+
+                relacion = ProductoTienda.query.filter_by(
+                    idTienda=tienda.idTienda, idProducto=producto_id
+                ).first()
+
+                if relacion:
+                    relacion.stockActual = nuevo_stock
+
+        db.session.commit()
+        flash("✅ Stock actualizado con éxito", "success")
+        return redirect(url_for("stores.productos_tienda", tienda_id=tienda.idTienda))
+
+    # GET con paginación
+    page = request.args.get("page", 1, type=int)
+    per_page = 25
+    productos_stock = db.session.query(
+        Producto,
+        ProductoTienda.stockActual
+    ).join(
+        ProductoTienda, Producto.idProducto == ProductoTienda.idProducto
+    ).filter(
+        ProductoTienda.idTienda == tienda_id
+    ).order_by(
+        Producto.producto
+    ).paginate(page=page, per_page=per_page, error_out=False)
+
+    return render_template("productos_tienda.html", tienda=tienda, productos_stock=productos_stock)

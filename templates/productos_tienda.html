@@ -1,0 +1,59 @@
+{% extends "index.html" %}
+
+{% block title %}Productos de {{ tienda.nombre }} - Tambo{% endblock %}
+
+{% block content %}
+<h2>Productos {{ tienda.nombre }}</h2>
+<p><b>Ubicación:</b> {{ tienda.departamento }} - {{ tienda.provincia }} - {{ tienda.distrito }}</p>
+<hr>
+
+<form method="POST">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Producto</th>
+                    <th>Stock Actual</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto, stock in productos_stock.items %}
+                <tr>
+                    <td>{{ producto.producto }}</td>
+                    <td>
+                        <input type="number" name="stock_{{ producto.idProducto }}" value="{{ stock }}" class="form-control" min="0">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit" class="btn btn-purple mt-3"><i class="bi bi-save"></i> Guardar Cambios</button>
+</form>
+
+<!-- Paginación -->
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if productos_stock.has_prev %}
+        <li class="page-item">
+            <a class="page-link btn-yellow" href="{{ url_for('stores.productos_tienda', tienda_id=tienda.idTienda, page=productos_stock.prev_num) }}">⬅ Anterior</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">⬅ Anterior</span></li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">Página {{ productos_stock.page }} de {{ productos_stock.pages }}</span>
+        </li>
+
+        {% if productos_stock.has_next %}
+        <li class="page-item">
+            <a class="page-link btn-yellow" href="{{ url_for('stores.productos_tienda', tienda_id=tienda.idTienda, page=productos_stock.next_num) }}">Siguiente ➡</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Siguiente ➡</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endblock %}

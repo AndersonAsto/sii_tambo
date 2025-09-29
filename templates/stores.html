@@ -65,6 +65,11 @@
                         <a href="{{ url_for('stores.edit', id=store.idTienda) }}" class="btn btn-purple btn-sm">✏️ Editar</a>
                         <form action="{{ url_for('stores.delete', id=store.idTienda) }}" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-yellow btn-sm">🗑️ Eliminar</button>
+<a href="{{ url_for('stores.productos_tienda', tienda_id=store.idTienda) }}" 
+   class="btn btn-success btn-sm">
+   Ver Tienda
+</a>
+
                         </form>
                     </td>
                 </tr>
