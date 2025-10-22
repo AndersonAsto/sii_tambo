@@ -101,13 +101,50 @@
   </div>
 </div>
 
+<!-- ================= HISTORIAL DE VENTAS ================= -->
+<div class="container mt-5">
+    <h3 style="color:#4B0082;">🧾 Historial de Ventas</h3>
+
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>ID Venta</th>
+          <th>Fecha</th>
+          <th>Cantidad Productos</th>
+          <th>Total</th>
+          <th>Productos</th> <!-- 👈 Nueva columna -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for venta in historial %}
+        <tr>
+          <td>{{ venta.idVenta }}</td>
+          <td>{{ venta.createdAt.strftime("%d/%m/%Y %H:%M") }}</td>
+          <td>{{ venta.cantidadProductos }}</td>
+          <td>S/ {{ "%.2f"|format(venta.total) }}</td>
+          <td>
+            <ul style="padding-left:15px; text-align:left; margin:0;">
+              {% for det in venta.detalles %}
+                <li>{{ det.producto.producto }} (x{{ det.cantidad }})</li>
+              {% endfor %}
+            </ul>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if historial|length == 0 %}
+      <p style="text-align:center; color:gray;">No hay ventas registradas aún.</p>
+    {% endif %}
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     let carrito = [];
     const totalEl = document.getElementById("total");
     const tablaCarrito = document.querySelector("#tabla-carrito tbody");
 
-    // --- función debounce ---
     function debounce(func, delay) {
         let timer;
         return function(...args) {
@@ -116,7 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
-    // --- búsqueda con debounce ---
     const buscarInput = document.getElementById("buscar");
     buscarInput.addEventListener("keyup", debounce(function() {
         let filtro = this.value.toLowerCase().trim();
@@ -124,9 +160,8 @@ document.addEventListener("DOMContentLoaded", () => {
             let nombre = tr.children[0].innerText.toLowerCase();
             tr.style.display = nombre.includes(filtro) ? "" : "none";
         });
-    }, 300)); // espera 300ms antes de ejecutar
+    }, 300));
 
-    // --- filtros por categoría y subcategoría ---
     document.getElementById("categoria").addEventListener("change", function() {
         let catId = this.value;
         document.querySelectorAll("#subcategoria option").forEach(opt => {
@@ -145,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // --- seleccionar producto desde modal ---
     document.querySelectorAll(".seleccionar").forEach(btn => {
         btn.addEventListener("click", function() {
             let id = this.dataset.id;
@@ -205,5 +239,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 </script>
-
 {% endblock %}

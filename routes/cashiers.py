@@ -48,7 +48,7 @@ def login():
             session["cajero_id"] = cajero.idUsuario
             session["cajero_nombre"] = cajero.email
             session["idTienda"] = cajero.idTienda
-            return redirect(url_for("cajeros.dashboard"))
+            return redirect(url_for("stock.stock"))
         else:
             flash("Correo o contraseña incorrectos", "danger")
 

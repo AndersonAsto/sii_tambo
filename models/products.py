@@ -1,4 +1,6 @@
 from config.config import db
+from models.category import Categoria
+
 
 class Producto(db.Model):
     __tablename__ = 'siit_productos'
@@ -14,6 +16,7 @@ class Producto(db.Model):
     estado = db.Column(db.Boolean, default=True)
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
+    
 
     def __repr__(self):
         return f"<Producto {self.producto}>"

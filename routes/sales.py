@@ -1,4 +1,5 @@
 from flask import Blueprint, request, redirect, url_for, session, flash, render_template
+from datetime import datetime
 from models.products import Producto
 from models.sale import Venta
 from models.saleDetail import DetalleVenta
@@ -14,12 +15,12 @@ def sales():
         flash("Debes iniciar sesión primero", "warning")
         return redirect(url_for("cajeros.login"))
 
+    id_usuario = session["cajero_id"]
+    id_tienda = session["idTienda"]
+
     if request.method == "POST":
         productos = request.form.getlist("producto_id[]")
         cantidades = request.form.getlist("cantidad[]")
-
-        id_usuario = session["cajero_id"]
-        id_tienda = session["idTienda"]
 
         total = 0
         items = []
@@ -37,15 +38,18 @@ def sales():
             flash("Debes seleccionar al menos un producto", "danger")
             return redirect(url_for("sales.sales"))
 
+        # Crear venta
         venta = Venta(
             idTienda=id_tienda,
             idUsuario=id_usuario,
             cantidadProductos=sum([i["cantidad"] for i in items]),
-            total=total
+            total=total,
+            createdAt=datetime.utcnow()
         )
         db.session.add(venta)
         db.session.flush()
 
+        # Crear detalles
         for item in items:
             detalle = DetalleVenta(
                 idVenta=venta.idVenta,
@@ -59,7 +63,18 @@ def sales():
         flash("✅ Venta registrada correctamente", "success")
         return redirect(url_for("sales.sales"))
 
+    # Datos para formulario
     categorias = Categoria.query.all()
     subcategorias = SubCategoria.query.all()
     productos = Producto.query.all()
-    return render_template("sales_panel.html", categorias=categorias, subcategorias=subcategorias, productos=productos)
+
+    # Historial de ventas de la tienda
+    historial = Venta.query.filter_by(idTienda=id_tienda).order_by(Venta.createdAt.desc()).limit(10).all()
+
+    return render_template(
+        "sales_panel.html",
+        categorias=categorias,
+        subcategorias=subcategorias,
+        productos=productos,
+        historial=historial
+    )
