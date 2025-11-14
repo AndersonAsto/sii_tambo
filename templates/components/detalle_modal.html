@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h5 class="modal-title">Detalle de Venta #{{ venta.idVenta }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body">
+
+    <p><strong>Tienda:</strong> {{ venta.tienda.nombreTienda }}</p>
+    <p><strong>Fecha:</strong> {{ venta.createdAt.strftime("%d/%m/%Y %H:%M") }}</p>
+    <p><strong>Total:</strong> S/. {{ "%.2f"|format(venta.total) }}</p>
+
+    <hr>
+
+    <h5>Productos</h5>
+
+    {% if detalles %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in detalles %}
+                <tr>
+                    <td>{{ d.producto.producto }}</td>
+                    <td>{{ d.cantidad }}</td>
+                    <td>S/. {{ "%.2f"|format(d.subtotal) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No hay detalles registrados.</p>
+    {% endif %}
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+</div>

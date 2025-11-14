@@ -11,7 +11,14 @@ class Venta(db.Model):
     total = db.Column(db.Numeric(10,2), nullable=False)
     createdAt = db.Column(db.DateTime, default=datetime.utcnow)
 
-    detalles = db.relationship("DetalleVenta", back_populates="venta", cascade="all, delete-orphan")
-    
+    # relación correcta
+    tienda = db.relationship("Store", backref="ventas", lazy="joined")
+
+    detalles = db.relationship(
+        "DetalleVenta",
+        back_populates="venta",
+        cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
-        return f"<Venta {self.venta}>"
+        return f"<Venta {self.idVenta}>"

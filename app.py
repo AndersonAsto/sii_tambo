@@ -14,6 +14,11 @@ def create_app():
     from routes.cashiers import cajeros_bp
     from routes.sales import sales_bp
     from routes.stock import stock_bp
+    from routes.bi import bi_bp
+    from routes.total_sales import total_sales_bp
+
+    app.register_blueprint(total_sales_bp, url_prefix="/totalsales")
+    app.register_blueprint(bi_bp, url_prefix="/bi")
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(stores_bp, url_prefix="/stores")
     app.register_blueprint(productos_bp, url_prefix="/products")

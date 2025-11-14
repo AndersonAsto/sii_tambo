@@ -3,9 +3,8 @@
 {% block title %}Tiendas - Tambo{% endblock %}
 
 {% block content %}
-<h2 class="fw-bold mb-4 text-dark">
-    🛒 Tiendas Registradas
-</h2>
+<div class="container mt-4">
+<h2 class="fw-bold mb-4 text-dark">Tiendas Registradas</h2>
 
 <!-- Botón para agregar tienda -->
 <a href="{{ url_for('stores.create') }}" class="btn btn-yellow mb-3">➕ Registrar Tienda</a>
@@ -133,4 +132,5 @@ provSelect.addEventListener("change", function() {
     }
 });
 </script>
+</div>
 {% endblock %}

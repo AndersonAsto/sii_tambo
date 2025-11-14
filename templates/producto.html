@@ -1,11 +1,9 @@
 {% extends 'admin_index.html' %}
 {% block title %}Productos - Tambo{% endblock %}
 {% block content %}
-<h2 class="fw-bold mb-4 text-dark">
-    🛒 Productos Tambo
-</h2>
-
-<!-- 🔍 Filtros -->
+<div class="container mt-4">
+    <h2 class="fw-bold mb-4 text-dark">Productos Registrados</h2>
+    <!-- 🔍 Filtros -->
 <div class="card border-0 shadow-sm rounded-4 mb-4">
     <div class="card-body">
         <form method="get" action="{{ url_for('productos.productos') }}" class="row g-3 align-items-end">
@@ -17,8 +15,7 @@
                         onchange="this.form.submit()">
                     <option value="">-- Todas --</option>
                     {% for cat in categorias %}
-                        <option value="{{ cat.idCategoria }}"
-                            {% if categoria_id == cat.idCategoria %} selected {% endif %}>
+                        <option value="{{ cat.idCategoria }}" {% if categoria_id == cat.idCategoria %} selected {% endif %}>
                             {{ cat.categoria }}
                         </option>
                     {% endfor %}
@@ -116,4 +113,6 @@
         <a href="{{ url_for('productos.productos', page=pagination.next_num, categoria=categoria_id, subcategoria=subcategoria_id) }}" class="btn btn-purple">Siguiente ➡</a>
     {% endif %}
 </nav>
+</div>
+
 {% endblock %}

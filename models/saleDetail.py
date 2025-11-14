@@ -12,7 +12,7 @@ class DetalleVenta(db.Model):
     createdAt = db.Column(db.DateTime, default=datetime.utcnow)
 
     venta = db.relationship("Venta", back_populates="detalles")
-    producto = db.relationship("Producto")  # si ya tienes tu modelo Producto
+    producto = db.relationship("Producto")
 
     def __repr__(self):
-        return f"<DetalleVenta {self.detalleventa}>"
+        return f"<DetalleVenta {self.idDetalle}>"
